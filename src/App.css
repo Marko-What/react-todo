@@ -39,6 +39,12 @@
 
 
 /* custom css */
-.done {
-  color:red;
+
+button {
+	margin:5px;
+	font-size:12px;
+	font-weight:700;
+	padding:10px;
+	border-radius:3px;
+	border:0px solid white;
 }

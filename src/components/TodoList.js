@@ -8,7 +8,6 @@ export const TodoList = () => {
     const {todos, getTodos} = useContext(GlobalContext);
 
     useEffect(()=>{
-       console.log("getTodos:" +JSON.stringify(todos));
         getTodos();
         // esLint-disable-next-line react-hooks/exhaustive-deps
     }, []);

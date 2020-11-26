@@ -3,11 +3,10 @@ export default (state, action) => {
     switch(action.type) {
 
       case 'GET_TODOS':
-        console.log("GET_TODOS: " + JSON.stringify(action.payload));
         return {
           ...state,
           loading:false,
-        todos: action.payload
+        todos: action.payload.reverse()
       }
 
       case 'GET_TODOS_ERROR':
@@ -19,11 +18,11 @@ export default (state, action) => {
       case 'DELETE_TODO':
         return {
             ...state,
-          todos: state.todos.filter(todo => todo.id !== action.payload)
+          todos: state.todos.filter(todo => todo.id !== action.payload),
+           idEdit:{}
         }
 
       case 'EDIT_TODO':
-        console.log("EDIT_TODO: "+ JSON.stringify(action.payload));
         return { 
             todos:state.todos,
             idEdit: state.todos.filter(todo => todo.id == action.payload)
@@ -32,38 +31,22 @@ export default (state, action) => {
       case 'CHANGE_COMPLETED':
           return {
             ...state,
-          /*  todos: state.todos.map((todo => {
-                // editing one item
-                if (todo.id ===  action.payload) {
-                  return Object.assign({}, todo, { completed: !todo.completed })
-                }
-                // return all the ones we're not changing
-                return todo
-              }))
-           */
-          todos: state.todos
+            todos: state.todos
         }  
 
 
       case 'CHANGE_ADD_COMPLETED':
-        console.log("newTodo changeAddEdit CHANGE_ADD_COMPLETED:"+JSON.stringify(action.payload));
         return {
           ...state,
           idEdit:{},
           todos: state.todos.map((todo => {
-              // editing one item
+            
               if (todo.id ===  action.payload.id) {
                 return Object.assign({}, {
                   ...action.payload
-                 /* id:action.payload.id,
-                  naziv:action.payload.naziv,
-                  oseba:action.payload.oseba,
-                  opis:action.payload.opis,
-                  dateCompleted:action.payload.dateCompleted,
-                  completed:action.payload.completed */
                 })
               }
-              // return all the ones we're not changing
+              
               return todo
             }))
           

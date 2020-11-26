@@ -1,6 +1,7 @@
-import React, { createContext, useReducer, useState } from 'react';
+import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
 import  axios  from 'axios';
+import moment from "moment";
 
 
 // Initial state
@@ -20,9 +21,11 @@ export const GlobalContext = createContext(initialState);
 // Provider component
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
-  
 
-    const backendServerAddress = "http://127.0.0.1:8000/api/opravilo/";
+  const PORT = ":80";
+  const SERVER_IP = "http://34.66.193.231"
+  const backendServerAddress = SERVER_IP + PORT+  "/api/v1/opravilo/";
+// const backendServerAddress = "http://127.0.0.1"+ PORT+ "/api/v1/opravilo/";
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -32,9 +35,8 @@ export const GlobalProvider = ({ children }) => {
     // Actions
 
     async function getTodos() {
-      try {                             /** hardcoded !!*/
+      try {                          
         const res = await axios.get(backendServerAddress);
-          console.log("getTodosaaa" + res);
           dispatch({
             type: 'GET_TODOS',
             payload: res.data
@@ -51,7 +53,7 @@ export const GlobalProvider = ({ children }) => {
   
     async function deleteTodo(id) {
 
-      try {                             /** hardcoded !!*/
+      try {                           
         await axios.delete(backendServerAddress + id);
           dispatch({
             type: 'DELETE_TODO',
@@ -70,12 +72,9 @@ export const GlobalProvider = ({ children }) => {
 
 
   
-    async function addTodo(todo) {
-      console.log("addTodo: " + JSON.stringify(todo));
-      
-      try {                             /** hardcoded !!*/
+    async function addTodo(todo) {      
+      try {                            
         const res =  await axios.post(backendServerAddress, todo, config);
-        console.log("addTodo: res" + JSON.stringify(res));
           dispatch({
             type: 'ADD_TODO',
             payload: res.data
@@ -106,13 +105,14 @@ export const GlobalProvider = ({ children }) => {
 
     async function changeTCompleted(todo) {
       
-      todo.completed = !todo.completed;
-      todo.datumZakljucevanja = "2020-11-17";
-      console.log("changeTCompleted:  " + JSON.stringify(todo));
-      try {                             /** hardcoded !!*/
+      todo.completed = !todo.completed;     
+      //const date_create = moment().format("YYYY-MM-DD");  
+      todo.completed === true ? todo.datumZakljucevanja = moment().format("YYYY-MM-DD") : todo.datumZakljucevanja = null;
+
+     
+      try {                            
        const res = await axios.put(backendServerAddress + todo.id, todo, config);
-       console.log("checked: resA:  " + JSON.stringify(res));
-       console.log("checked:  ididididi:  " + res.data.id);
+       
           dispatch({
             type: 'CHANGE_COMPLETED',
             payload: res.data.id
@@ -133,17 +133,14 @@ export const GlobalProvider = ({ children }) => {
 
 
     async function changeAddEdit(todo) {
-      console.log("newTodo changeAddEdit :" + JSON.stringify(todo));
-      todo.datumZakljucevanja ="2020-11-17";
+     
       try {                           
        const res = await axios.put(backendServerAddress + todo.id, todo, config);
-        console.log("newTodo changeAddEdit :" +res);
           dispatch({
             type: 'CHANGE_ADD_COMPLETED',
             payload: res.data
           }); 
         } catch(err) {
-          console.log("newTodo changeAddEdit err :" +err);
           dispatch({
             type: 'GET_TODOS_ERROR',
             payload: err.response.data.error
