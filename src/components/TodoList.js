@@ -1,11 +1,12 @@
-import React, {useContext, useEffect } from 'react'
+import React, {useContext, useEffect } from 'react';
 import { Todo } from './Todo';
 import {GlobalContext} from '../context/GlobalState';
 
+import { ErrorC } from './Error';
 
 export const TodoList = () => {
 
-    const {todos, getTodos} = useContext(GlobalContext);
+    const {todos, getTodos, error} = useContext(GlobalContext);
 
     useEffect(()=>{
         getTodos();
@@ -15,6 +16,7 @@ export const TodoList = () => {
   
     return (
         <div>
+	{error && <ErrorC />} 
             <h2>todoList</h2>
             {todos.map(todo => (
                 <Todo key={todo.id} todo={todo} />

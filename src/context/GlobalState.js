@@ -22,10 +22,9 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  const PORT = ":80";
-  const SERVER_IP = "http://34.66.193.231"
-  const backendServerAddress = SERVER_IP + PORT+  "/api/v1/opravilo/";
-// const backendServerAddress = "http://127.0.0.1"+ PORT+ "/api/v1/opravilo/";
+ 
+  const backendServerAddress = "https://34.66.193.231/api/v1/opravilo";
+//const backendServerAddress = "http://127.0.0.1"+ PORT+ "/api/v1/opravilo/";
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
 
     async function getTodos() {
       try {                          
-        const res = await axios.get(backendServerAddress);
+        const res = await axios.get(backendServerAddress, config);
           dispatch({
             type: 'GET_TODOS',
             payload: res.data
@@ -44,7 +43,7 @@ export const GlobalProvider = ({ children }) => {
           } catch(err) {
             dispatch({
               type: 'GET_TODOS_ERROR',
-              payload: err.response.data.error
+              payload: err
             });
           }
     }
@@ -54,7 +53,7 @@ export const GlobalProvider = ({ children }) => {
     async function deleteTodo(id) {
 
       try {                           
-        await axios.delete(backendServerAddress + id);
+        await axios.delete(backendServerAddress +'/'+id);
           dispatch({
             type: 'DELETE_TODO',
             payload: id
@@ -62,7 +61,7 @@ export const GlobalProvider = ({ children }) => {
         } catch(err) {
           dispatch({
             type: 'GET_TODOS_ERROR',
-            payload: err.response.data.error
+            payload: err
           });
         }
 
@@ -82,7 +81,7 @@ export const GlobalProvider = ({ children }) => {
         } catch(err) {
           dispatch({
             type: 'GET_TODOS_ERROR',
-            payload: err.response.data.error
+            payload: err
           });
         }
 
@@ -111,7 +110,7 @@ export const GlobalProvider = ({ children }) => {
 
      
       try {                            
-       const res = await axios.put(backendServerAddress + todo.id, todo, config);
+       const res = await axios.put(backendServerAddress +'/'+ todo.id, todo, config);
        
           dispatch({
             type: 'CHANGE_COMPLETED',
@@ -120,7 +119,7 @@ export const GlobalProvider = ({ children }) => {
         } catch(err) {
           dispatch({
             type: 'GET_TODOS_ERROR',
-            payload: err.response.data.error
+            payload: err
           });
         }
 
@@ -135,7 +134,7 @@ export const GlobalProvider = ({ children }) => {
     async function changeAddEdit(todo) {
      
       try {                           
-       const res = await axios.put(backendServerAddress + todo.id, todo, config);
+       const res = await axios.put(backendServerAddress +'/'+todo.id, todo, config);
           dispatch({
             type: 'CHANGE_ADD_COMPLETED',
             payload: res.data
@@ -143,7 +142,7 @@ export const GlobalProvider = ({ children }) => {
         } catch(err) {
           dispatch({
             type: 'GET_TODOS_ERROR',
-            payload: err.response.data.error
+            payload: err
           });
         }
 

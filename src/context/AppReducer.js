@@ -6,7 +6,8 @@ export default (state, action) => {
         return {
           ...state,
           loading:false,
-        todos: action.payload.reverse()
+        todos: action.payload.reverse(),
+	error:null
       }
 
       case 'GET_TODOS_ERROR':
@@ -19,19 +20,22 @@ export default (state, action) => {
         return {
             ...state,
           todos: state.todos.filter(todo => todo.id !== action.payload),
-           idEdit:{}
+          idEdit:{},
+	  error:null
         }
 
       case 'EDIT_TODO':
         return { 
             todos:state.todos,
-            idEdit: state.todos.filter(todo => todo.id == action.payload)
+            idEdit: state.todos.filter(todo => todo.id == action.payload),
+	    error:null
         }
         
       case 'CHANGE_COMPLETED':
           return {
             ...state,
-            todos: state.todos
+            todos: state.todos,
+	    error:null
         }  
 
 
@@ -39,6 +43,7 @@ export default (state, action) => {
         return {
           ...state,
           idEdit:{},
+	  error:null,
           todos: state.todos.map((todo => {
             
               if (todo.id ===  action.payload.id) {
@@ -57,7 +62,8 @@ export default (state, action) => {
         return {
             ...state,
             todos: [action.payload, ...state.todos],
-            idEdit:{}
+            idEdit:{},
+	    error:null
         }
         
       default:
